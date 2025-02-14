@@ -9,6 +9,7 @@
           <div class="q-py-sm">Informe a Razão Social</div>
           <RazaoSocialSelect 
             v-model="razaoSocial"
+            class="bg-white"
           />
         </div>
         <div class="flex-grow">
