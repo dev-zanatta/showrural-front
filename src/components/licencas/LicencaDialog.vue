@@ -183,6 +183,7 @@ const downloadPdf = async (row) => {
     numero_protocolo: row.n_protocolo,
   });
   row.pdf = response.data.licenca.pdf;
+  row.condicionamento = response.data.licenca.condicionamento;
   PdfDownloader({
     base64Data: response.data.licenca.pdf,
     filename: `${row.n_protocolo}.pdf`,

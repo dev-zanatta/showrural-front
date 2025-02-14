@@ -239,13 +239,13 @@ const columns = [
     align: "left",
     required: true,
   },
-  {
-    name: "acoes",
-    label: "Ações",
-    field: "acoes",
-    align: "center",
-    required: true,
-  },
+  // {
+  //   name: "acoes",
+  //   label: "Ações",
+  //   field: "acoes",
+  //   align: "center",
+  //   required: true,
+  // },
   {
     name: "risco",
     label: "Risco",
@@ -379,7 +379,7 @@ const PdfDownloader = ({ base64Data, filename = "document.pdf" }) => {
   }
 };
 
-const onRowClick = (row) => {
+const onRowClick = async (row) => {
   $q.dialog({
     component: LicencaDialog,
     componentProps: {
