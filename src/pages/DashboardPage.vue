@@ -100,8 +100,11 @@
                     <q-btn
                       flat
                       icon="mdi-download-outline"
-                      @click="downloadFile"
+                      @click="downloadFile(props.row)"
                     >
+                      <q-tooltip>
+                        Relatório em excel
+                      </q-tooltip>
                     </q-btn>
                   </div>
                   <q-table
@@ -292,8 +295,29 @@ const checa = async (row) => {
   console.log(response);
 };
 
-const downloadFile = () => {
-  console.log("Download");
+const downloadFile = async (row) => {
+  const response = await api.post('/gerar-excel-com-licencas', {
+    licencas: row.monitoramento_licencas.map(licenca => {
+      const { pdf, ...rest } = licenca;
+      pdf;
+      return rest;
+    }),
+  });
+  if(response.data.base64) {
+    const byteCharacters = atob(response.data.base64);
+    const byteNumbers = new Array(byteCharacters.length).fill().map((_, i) => byteCharacters.charCodeAt(i));
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'relatorio.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
 };
 
 onMounted(async () => {
