@@ -41,28 +41,50 @@
   </q-dialog>
 </template>
 <script setup>
-import { useDialogPluginComponent } from "quasar";
+import { useDialogPluginComponent, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { ref } from "vue";
+import ViewLicencasDialog from "./ViewLicencasDialog.vue";
 
 defineEmits([...useDialogPluginComponent.emits]);
 
+const $q = useQuasar();
 const razaoSocial = ref("");
 const selected = ref("");
 const options = [
-  { label: "Empresa 1", value: "1" },
-  { label: "Empresa 2", value: "2" },
-  { label: "Empresa 3", value: "3" },
+  { label: "Produtor Suíno", value: "suino" },
+  { label: "Produtor Peixes", value: "peixes" },
+  { label: "Produtor Aves", value: "aves" },
+  { label: "Indústria", value: "industria" },
 ];
 
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent();
 
 const onOKClick = async () => {
-  const response = await api.post("/novo-monitoramento", {
-    razaoSocial: razaoSocial.value,
+  const response = await api.get('/all-licencas-por-razao-social', {
+    params: {
+      razaoSocial: razaoSocial.value,
+    },
   });
-  if (response.data) {
-    onDialogOK(razaoSocial.value);
+  if(response.data) {
+    $q.dialog({
+      component: ViewLicencasDialog,
+      componentProps: {
+        licencas: response.data,
+        selected: selected.value,
+        razaoSocial: razaoSocial.value,
+      }
+    }).onOk(() => {
+      onDialogOK(razaoSocial.value);
+    });
   }
+
+  // const response = await api.post("/novo-monitoramento", {
+  //   razaoSocial: razaoSocial.value,
+  //   selected: selected.value.label,
+  // });
+  // if (response.data) {
+  //   onDialogOK(razaoSocial.value);
+  // }
 };
 </script>

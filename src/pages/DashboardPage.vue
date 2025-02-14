@@ -54,6 +54,11 @@
                     {{ props.row[col.field] }}
                   </q-item-section>
                 </q-td>
+                <q-td v-if="col.field == 'tipo'">
+                  <q-item-section>
+                    {{ props.row[col.field] ?? 'Não cadastrado' }}
+                  </q-item-section>
+                </q-td>
                 <q-td v-if="col.field == 'total'">
                   <q-item-section @click="openTodos(props.row)">
                     <span>{{ props.row.monitoramento_licencas?.length }}</span>
@@ -184,6 +189,14 @@ const columns = [
     style: "width: 10%",
     required: true,
   },
+  {
+    name: "risco",
+    label: "Status",
+    field: "risco",
+    align: "center",
+    style: "width: 10%",
+    required: true,
+  },
 ];
 
 const columnsEmpresas = [
@@ -191,7 +204,15 @@ const columnsEmpresas = [
     name: "razao_social",
     label: "Nome",
     field: "razao_social",
-    align: "center",
+    align: "left",
+    style: "width: 25%",
+    required: true,
+  },
+  {
+    name: "tipo",
+    label: "Tipo",
+    field: "tipo",
+    align: "left",
     style: "width: 25%",
     required: true,
   },
@@ -199,7 +220,7 @@ const columnsEmpresas = [
     name: "total",
     label: "Total",
     field: "total",
-    align: "center",
+    align: "left",
     style: "width: 25%",
     required: true,
   },
@@ -207,7 +228,7 @@ const columnsEmpresas = [
     name: "vencer",
     label: "Vencer",
     field: "vencer",
-    align: "center",
+    align: "left",
     style: "width: 25%",
     required: true,
   },
@@ -215,7 +236,7 @@ const columnsEmpresas = [
     name: "vencidas",
     label: "Vencidas",
     field: "vencidas",
-    align: "center",
+    align: "left",
     style: "width: 25%",
     required: true,
   },
@@ -247,14 +268,17 @@ const countVencidas = (row) => {
   }).length;
 };
 
-const openMonitorarDialog = () => {
+const openMonitorarDialog = async () => {
   $q.dialog({
     component: AddMonitoramentoDialog,
-  }).onOk(() => {
+  }).onOk( async () => {
     $q.notify({
       message: "Monitoramento adicionado com sucesso",
       color: "positive",
     });
+
+    const response = await api.get("/licencas-organizadas");
+    licencas.value = response.data;
   });
 };
 

@@ -130,7 +130,7 @@ const navigationItems = [
     type: "single",
   },
   {
-    title: "Cadastros",
+    title: "Modalidades",
     name: "CadastrosPage",
     icon: "list",
     type: "single",

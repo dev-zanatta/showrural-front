@@ -18,7 +18,7 @@ const routes = [
       { 
         path: 'cadastros',
         name: 'CadastrosPage',
-        meta: { title: 'Cadastros' },
+        meta: { title: 'Modalidades' },
         component: () => import('pages/CadastrosPage.vue') 
       },
 
