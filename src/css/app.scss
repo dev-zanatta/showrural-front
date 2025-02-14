@@ -1,6 +1,110 @@
 // app global css in SCSS form
 @use "sass:map";
 @use "src/css/quasar.variables.scss";
+q-app {
+  font-family: "Poppins" !important;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+.font-h1 {
+  font-family: "Poppins";
+  font-size: 96px;
+  font-weight: 300;
+  line-height: 144px;
+}
+
+.font-h2 {
+  font-family: "Poppins";
+  font-size: 60px;
+  font-weight: 300;
+  line-height: 90px;
+}
+
+.font-h3 {
+  font-family: "Poppins";
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 72px;
+}
+
+.font-h4 {
+  font-family: "Poppins";
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 51px;
+}
+
+.font-h5 {
+  font-family: "Poppins";
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 36px;
+}
+
+.font-h6 {
+  font-family: "Poppins";
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  letter-spacing: 0.7px;
+}
+
+.font-subtitle-1 {
+  font-family: "Poppins";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+}
+
+.font-subtitle-2 {
+  font-family: "Poppins";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  text-align: left;
+}
+
+.font-body-1 {
+  font-family: "Poppins";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.font-body-2 {
+  font-family: "Poppins";
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+}
+
+.font-overline {
+  font-family: "Poppins";
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 1.25px;
+}
+
+.font-caption {
+  font-family: "Poppins";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.font-button {
+  font-family: "Poppins";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 1.25px;
+}
 
 .flex-grow {
   flex-grow: 1;
@@ -94,14 +198,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .q-table__top {
   padding: 0 !important;
-}
-
-* {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.1px;
 }
 
 .subTitulo {

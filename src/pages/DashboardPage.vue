@@ -38,7 +38,9 @@
           <template v-slot:header="props">
             <q-tr :props="props">
               <q-th v-for="col in props.cols" :key="col.name" :props="props">
-                {{ col.label }}
+                <div class="text-h6" style="font-size: 18px">
+                  {{ col.label }}
+                </div>
               </q-th>
             </q-tr>
           </template>
@@ -49,31 +51,35 @@
                 :key="col.name"
                 :props="props"
               >
-                <q-td v-if="col.field == 'razao_social'">
-                  <q-item-section>
+                <template v-if="col.field == 'razao_social'">
+                  <div
+                    class="flex items-center text-h6"
+                    style="font-size: 18px"
+                  >
+                    <q-icon name="mdi-bank-outline" size="24px" />
                     {{ props.row[col.field] }}
-                  </q-item-section>
-                </q-td>
-                <q-td v-if="col.field == 'tipo'">
+                  </div>
+                </template>
+                <template v-if="col.field == 'tipo'">
                   <q-item-section>
-                    {{ props.row[col.field] ?? 'Não cadastrado' }}
+                    {{ props.row[col.field] ?? "Não cadastrado" }}
                   </q-item-section>
-                </q-td>
-                <q-td v-if="col.field == 'total'">
-                  <q-item-section @click="openTodos(props.row)">
-                    <span>{{ props.row.monitoramento_licencas?.length }}</span>
+                </template>
+                <template v-if="col.field == 'total'">
+                  <q-item-section class="text-h6" style="font-size: 18px">
+                    {{ props.row.monitoramento_licencas?.length }}
                   </q-item-section>
-                </q-td>
-                <q-td v-if="col.field == 'vencer'">
-                  <q-item-section @click="openVencendo(props.row)">
+                </template>
+                <template v-if="col.field == 'vencer'">
+                  <q-item-section class="text-h6" style="font-size: 18px">
                     {{ countVencendo(props.row) }}
                   </q-item-section>
-                </q-td>
-                <q-td v-if="col.field == 'vencidas'">
-                  <q-item-section @click="openVencidas(props.row)">
+                </template>
+                <template v-if="col.field == 'vencidas'">
+                  <q-item-section class="text-h6" style="font-size: 18px">
                     {{ countVencidas(props.row) }}
                   </q-item-section>
-                </q-td>
+                </template>
               </q-td>
             </q-tr>
             <q-tr v-show="props.expand" :props="props" class="full-width">
@@ -92,9 +98,8 @@
                     </q-input>
                     <q-space />
                     <q-btn
-                      color="button"
                       flat
-                      icon="mdi-download"
+                      icon="mdi-download-outline"
                       @click="downloadFile"
                     >
                     </q-btn>
@@ -105,10 +110,13 @@
                     class="full-width"
                   >
                     <template #body-cell-acoes="{ row }">
-                      <q-td>
-                        <q-item-section>
-                          <q-btn @click="checa(row)">Baixar</q-btn>
-                        </q-item-section>
+                      <q-td class="flex flex-center">
+                        <q-btn
+                          flat
+                          icon-right="mdi-file-download-outline"
+                          @click="checa(row)"
+                          >Baixar</q-btn
+                        >
                       </q-td>
                     </template>
                   </q-table>
@@ -128,7 +136,6 @@ import { useQuasar } from "quasar";
 import AddMonitoramentoDialog from "src/components/monitoramento/AddMonitoramentoDialog.vue";
 import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
-
 const $q = useQuasar();
 const licencas = ref([]);
 
@@ -138,15 +145,13 @@ const columns = [
     label: "Protocolo",
     field: "n_protocolo",
     align: "left",
-    style: "width: 15%",
     required: true,
   },
   {
     name: "n_documento",
     label: "N Documento",
     field: "n_documento",
-    align: "left",
-    style: "width: 15%",
+    align: "right",
     required: true,
   },
   {
@@ -154,15 +159,20 @@ const columns = [
     label: "Modalidade",
     field: "modalidade",
     align: "left",
-    style: "width: 15%",
     required: true,
   },
   {
-    name: "cidade_uf",
-    label: "Cidade/UF",
-    field: "cidade_uf",
+    name: "cidade",
+    label: "Cidade",
+    field: "cidade",
     align: "left",
-    style: "width: 15%",
+    required: true,
+  },
+  {
+    name: "uf",
+    label: "UF",
+    field: "uf",
+    align: "left",
     required: true,
   },
   {
@@ -170,7 +180,6 @@ const columns = [
     label: "data Emissão",
     field: "data_emissao",
     align: "left",
-    style: "width: 15%",
     required: true,
   },
   {
@@ -178,7 +187,6 @@ const columns = [
     label: "Data Validade",
     field: "data_validade",
     align: "left",
-    style: "width: 15%",
     required: true,
   },
   {
@@ -186,7 +194,6 @@ const columns = [
     label: "Ações",
     field: "acoes",
     align: "center",
-    style: "width: 10%",
     required: true,
   },
   {
@@ -202,10 +209,9 @@ const columns = [
 const columnsEmpresas = [
   {
     name: "razao_social",
-    label: "Nome",
     field: "razao_social",
     align: "left",
-    style: "width: 25%",
+    style: "width: 50%",
     required: true,
   },
   {
@@ -213,31 +219,27 @@ const columnsEmpresas = [
     label: "Tipo",
     field: "tipo",
     align: "left",
-    style: "width: 25%",
     required: true,
   },
   {
     name: "total",
     label: "Total",
     field: "total",
-    align: "left",
-    style: "width: 25%",
+    align: "right",
     required: true,
   },
   {
     name: "vencer",
     label: "Vencer",
     field: "vencer",
-    align: "left",
-    style: "width: 25%",
+    align: "right",
     required: true,
   },
   {
     name: "vencidas",
     label: "Vencidas",
     field: "vencidas",
-    align: "left",
-    style: "width: 25%",
+    align: "right",
     required: true,
   },
 ];
@@ -271,52 +273,23 @@ const countVencidas = (row) => {
 const openMonitorarDialog = async () => {
   $q.dialog({
     component: AddMonitoramentoDialog,
-  }).onOk( async () => {
+  }).onOk(async () => {
+    const response = await api.get("/licencas-organizadas");
+    licencas.value = response.data;
     $q.notify({
       message: "Monitoramento adicionado com sucesso",
       color: "positive",
     });
-
-    const response = await api.get("/licencas-organizadas");
-    licencas.value = response.data;
   });
 };
 
-const openVencendo = (monitoramento) => {
-  let vencendo = monitoramento.monitoramento_licencas.filter((licenca) => {
-    const hoje = new Date();
-    const dataValidade = new Date(licenca.data_validade);
-
-    // Calculate the difference in days
-    const diffTime = dataValidade - hoje;
-    const diffDays = diffTime / (1000 * 60 * 60 * 24); // Convert milliseconds to days
-
-    return diffDays > 0 && diffDays <= 120;
-  });
-  console.log(vencendo);
-};
-
-const openVencidas = (monitoramento) => {
-  let vencidas = monitoramento.monitoramento_licencas.filter((licenca) => {
-    const hoje = new Date();
-    const dataValidade = new Date(licenca.data_validade);
-
-    // Calculate the difference in days
-    const diffTime = dataValidade - hoje;
-    const diffDays = diffTime / (1000 * 60 * 60 * 24); // Convert milliseconds to days
-
-    return diffDays < 0;
-  });
-  console.log(vencidas);
-};
-
-const openTodos = (monitoramento) => {
-  console.log(monitoramento.monitoramento_licencas);
-};
-
-const checa = (row) => {
+const checa = async (row) => {
   console.log(row);
-  console.log(row.n_protocolo);
+  const response = await api.post("/baixar-pdf", {
+    numero_protocolo: row.n_protocolo,
+  });
+
+  console.log(response);
 };
 
 const downloadFile = () => {
