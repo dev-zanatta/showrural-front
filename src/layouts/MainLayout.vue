@@ -61,7 +61,7 @@
               />
             </Transition>
           </router-view>
-          <img class="absolute-bottom-right q-pa-lg" :src="BottomLogo" alt="logo" />
+          <img class="fixed-bottom-right q-pa-lg" :src="BottomLogo" alt="logo" />
         </q-scroll-area>
       </q-page>
     </q-page-container>

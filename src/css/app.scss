@@ -186,6 +186,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .q-scrollarea__content {
   display: flex;
   flex-direction: column;
+  height: calc(100dvh - 68px - env(safe-area-inset-top)) !important;
   flex: 1 1 auto;
 }
 
