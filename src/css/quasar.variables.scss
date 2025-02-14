@@ -1,39 +1,183 @@
-// Quasar SCSS (& Sass) Variables
-// --------------------------------------------------
-// To customize the look and feel of this app, you can override
-// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+    // Quasar SCSS Variables with Material Design Color System
+    // --------------------------------------------------
 
-// Check documentation for full list of Quasar variables
+    // Primary Theme Colors
+    $primary: #DC3545; // Material Blue 700
+    $secondary: #9c27b0; // Material Purple 500
+    $accent: #e91e63; // Material Pink 500
 
-// Your own variables (that are declared here) and Quasar's own
-// ones will be available out of the box in your .vue/.scss/.sass files
+    // Dark Theme Base Colors
+    $dark: #1d1d1d;
 
-// It's highly recommended to change the default colors
-// to match your app's branding.
-// Tip: Use the "Theme Builder" on Quasar's documentation website.
+    // Status Colors
+    $positive: #2e7d32; // Material Green 800
+    $negative: #d32f2f; // Material Red 700
+    $info: #0288d1; // Material Light Blue 700
+    $warning: #ed6c02; // Material Orange 800
 
-//$primary   : #1976D2;
-//$secondary : #26A69A;
-//$accent    : #9C27B0;
+    // Extended Color System with Light/Dark Variants
+    $colors: (
+      "button": #DC3545,
+      "background-1": #EFEFEF,
+      'primary-3': #ABADB0,
+      // Primary Colors and Variants
+      "primary": #DC3545,
+      // Base - Blue 700
+      "primary-light": #4caf50,
+      // Light - Blue 400
+      "primary-dark": #1b5e20,
 
-//$dark      : #1D1D1D;
-//$dark-page : #121212;
+      
 
-//$positive  : #21BA45;
-//$negative  : #C10015;
-//$info      : #31CCEC;
-//$warning   : #F2C037;
+      // Dark - Blue 800
+      // Secondary Colors and Variants
+      "secondary": #9c27b0,
+      // Base - Purple 500
+      "secondary-light": #ba68c8,
+      // Light - Purple 300
+      "secondary-dark": #7b1fa2,
 
-$primary   : #f9f6e5;  // Verde Floresta - Sustentabilidade
-$secondary : #1565C0;  // Azul Profundo - Profissionalismo
-$accent    : #81C784;  // Verde Claro - Organização
+      // Terceary Colors and Variants
+      "terciary": #ff9800,
+      // Base - Orange 500
+      "terciary-light": #ffb74d,
+      // Light - Orange 300
+      "terciary-dark": #f57c00,
 
-$dark      : #1D1D1D;  // Fundo escuro
-$dark-page : #121212;  // Página escura
+      // Dark - Purple 700
+      // Background Colors
+      "page": #f1f1f1,
 
-$positive  : #21BA45;  // Indicadores positivos
-$negative  : #C10015;  // Erros e alertas
-$info      : #31CCEC;  // Informações
-$warning   : #F2C037;  // Atenção e alertas
+      // Surface Colors
+      "surface": #ffffff,
+      "surface-light": #f5f5f5,
+      "surface-dark": #f1f1f1,
 
-$background: #f9f6e5;  // Fundo padrão
+      //text color
+      "text": #000000,
+
+      // Status Colors with Variants
+      "success": #2e7d32,
+      // Green 800
+      "success-light": #4caf50,
+      // Green 500
+      "success-dark": #1b5e20,
+
+      // Green 900
+      "error": #d32f2f,
+      // Red 700
+      "error-light": #ef5350,
+      // Red 400
+      "error-dark": #c62828,
+
+      // Red 800
+      "warning": #ed6c02,
+      // Orange 800
+      "warning-light": #ff9800,
+      // Orange 500
+      "warning-dark": #e65100,
+
+      // Orange 900
+      "info": #0288d1,
+      // Light Blue 700
+      "info-light": #03a9f4,
+      // Light Blue 500
+      "info-dark": #01579b
+    );
+
+    // Dark Theme Color Overrides
+    $colors-dark: (
+      // Primary Colors and Variants
+      "primary": #66bb6a,
+
+      "button": #DC3545,
+      "background-1": #EFEFEF,
+      'primary-3': #ABADB0,
+
+      // Base - Blue 700
+      "primary-light": #81c784,
+      // Blue 50
+      "primary-dark": #388e3c,
+
+      "dark": #1d1d1d,
+
+      // Blue 400
+      // Secondary Colors - Lighter in Dark Mode
+      "secondary": #ce93d8,
+      // Purple 200
+      "secondary-light": #f3e5f5,
+      // Purple 50
+      "secondary-dark": #ab47bc,
+
+      //Terceary Colors - Lighter in Dark Mode
+      "terciary": #ffd191,
+      // Yellow 200
+      "terciary-light": #ffecb3,
+      // Yellow 50
+      "terciary-dark": #ffab40,
+
+      "page": #121212,
+
+      "surface": #1d1d1d,
+      "surface-light": #333333,
+      "surface-dark": #121212,
+
+      "text": #ffffff,
+
+      // Black Background
+      // Status Colors - Adjusted for Dark Mode
+      "success": #66bb6a,
+      // Green 400
+      "success-light": #81c784,
+      // Green 300
+      "success-dark": #388e3c,
+
+      // Green 700
+      "error": #f44336,
+      // Red 500
+      "error-light": #e57373,
+      // Red 300
+      "error-dark": #d32f2f,
+
+      // Red 700
+      "warning": #ffa726,
+      // Orange 400
+      "warning-light": #ffb74d,
+      // Orange 300
+      "warning-dark": #f57c00,
+
+      // Orange 700
+      "info": #29b6f6,
+      // Light Blue 400
+      "info-light": #4fc3f7,
+      // Light Blue 300
+      "info-dark": #0288d1 // Light Blue 700
+    );
+
+    // Generate color utility classes for light theme
+    @each $name, $color in $colors {
+      .text-#{$name} {
+        color: $color !important;
+      }
+      .bg-#{$name} {
+        background: $color !important;
+      }
+      .q-color-#{$name} {
+        color: $color !important;
+      }
+    }
+
+    // Generate color utility classes for dark theme
+    .body--dark {
+      @each $name, $color in $colors-dark {
+        .text-#{$name} {
+          color: $color !important;
+        }
+        .bg-#{$name} {
+          background: $color !important;
+        }
+        .q-color-#{$name} {
+          color: $color !important;
+        }
+      }
+    }

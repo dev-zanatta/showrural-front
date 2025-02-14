@@ -1,87 +1,130 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          color="black"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-        <div >
-          <img src="~assets/logo.jpeg" alt="Quasar logo" style="width: 60px; height: 60px"/>
-        </div>
+  <q-layout class="relative" view="hHh lpR fFf">
+    <LeftMenuLayout v-if="!$q.screen.lt.sm" />
+    <q-header v-if="$q.screen.lt.sm" class="bg-transparent q-pa-sm">
+      <q-toolbar
+        class="flex justify-between bg-surface"
+        style="border-radius: 6px !important"
+      >
+        <q-btn dense flat @click="toggleLeftDrawer">
+          <q-icon name="menu" :color="$q.dark.isActive ? 'white' : 'black'" />
+        </q-btn>
+        <q-btn dense flat>
+          <img
+            :src="someAvatar()"
+            alt="avatar"
+            style="width: 20px; height: 20px; border-radius: 50%"
+          />
+          <q-menu anchor="center right" self="top start">
+            <q-list class="column no-wrap overflow-hidden">
+              <q-item
+                v-ripple
+                v-close-popup
+                clickable
+                :to="{ name: 'ProfilePage' }"
+                exact
+                exact-active-class="menu-selected"
+              >
+                <div class="flex">
+                  <q-item-section avatar>
+                    <q-icon
+                      name="account_circle"
+                      color="primary"
+                      style="font-size: 18px"
+                    />
+                  </q-item-section>
+                  <q-item-section>{{ $t("user.profile.self") }}</q-item-section>
+                </div>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
       </q-toolbar>
     </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      class="bg-primary"
-    >
-      <q-list>
-        <div
-          v-for="link in linksList"
-          :key="link.title"
-          @click="goTo(link.route)"
-        >
-          <q-item clickable>
-            <q-item-section avatar>
-              <q-icon :name="link.icon" />
-            </q-item-section>
-
-            <q-item-section>
-              <q-item-label>{{ link.title }}</q-item-label>
-              <q-item-label caption>{{ link.caption }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </div>
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
-      <router-view />
+      <q-page>
+        <q-scroll-area
+          ref="scrollAreaRef"
+          :style="
+            $q.screen.lt.sm
+              ? 'height: calc(100dvh - 68px - env(safe-area-inset-top)) !important;'
+              : 'height: calc(100dvh - env(safe-area-inset-top)) !important;'
+          "
+        >
+          <router-view v-slot="{ Component }">
+            <Transition mode="out-in">
+              <component
+                :is="Component"
+                style="padding: 20px !important; padding-right: 10px !important"
+                :style="$q.screen.lt.sm ? 'padding-left: 10px !important;' : ''"
+              />
+            </Transition>
+          </router-view>
+        </q-scroll-area>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router';
+import { ref, useTemplateRef, watch } from "vue";
+import { useRoute } from "vue-router";
+// import { useAuth } from "src/composables/useAuth";
+// import { useRouter } from "vue-router";
+import LeftMenuLayout from "src/components/layout/LeftMenuLayout.vue";
+// import LeftMenuLayoutMobile from "src/components/layout/LeftMenuLayoutMobile.vue";
 
-const router = useRouter();
-const linksList = [
-  {
-    title: 'Home',
-    caption: '',
-    route: '/',
-    icon: 'home'
-  },
-  {
-    title: 'Documentos',
-    caption: '',
-    route: '/documentos',
-    icon: 'folder'
-  },
-  {
-    title: 'Cadastros',
-    caption: '',
-    route: '/cadastros',
-    icon: 'list'
-  },
-];
+defineOptions({
+  name: "MainLayout",
+});
 
-const goTo = (route) => {
-  router.push(route)
-}
+// const { logout } = useAuth();
+const route = useRoute();
+const leftDrawerOpen = ref(false);
+const scrollAreaRef = useTemplateRef("scrollAreaRef");
+// const router = useRouter();
 
-const leftDrawerOpen = ref(false)
+let oldValue = route.path;
 
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+const someAvatar = () => {
+  return "https://cdn.quasar.dev/img/avatar4.jpg";
+};
+
+// const logoutFn = async () => {
+//   await logout();
+//   router.push({ name: "LoginPage" });
+// };
+
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
+
+watch(route, (value) => {
+  if (oldValue.path != value.path) {
+    scrollAreaRef.value.setScrollPosition("vertical", 0, 0);
+    scrollAreaRef.value.setScrollPosition("horizontal", 0, 0);
+  }
+  oldValue = value.path;
+});
 </script>
+<style scoped>
+.v-enter-active {
+  opacity: 1;
+  transition: all 0.15s ease-in;
+}
+
+.v-leave-active {
+  opacity: 1;
+  transition: all 0.15s ease-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transition: all 0.15s ease-in;
+}
+
+.v-leave-to {
+  transition: all 0.15s ease-out;
+}
+</style>
