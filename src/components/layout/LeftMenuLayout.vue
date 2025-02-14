@@ -46,6 +46,7 @@
                   :src="logo"
                   alt="avatar"
                   style="width: 25px; height: 25px; border-radius: 50%"
+                  @click="goTo('DashboardPage')"
                 />
               </template>
             </q-item-section>
@@ -114,17 +115,13 @@ import LogoSoftparMini from "src/assets/softpar_logo_mini.svg";
 import logo from "src/assets/logo.svg";
 import { Cookies } from "quasar";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 
 const $q = useQuasar();
+const router = useRouter();
 const navigationItems = [
   {
-    title: "Home",
-    name: "DashboardPage",
-    icon: "home",
-    type: "single",
-  },
-  {
-    title: "Documentos",
+    title: "Licenças",
     name: "DocumentosPage",
     icon: "folder",
     type: "single",
@@ -142,6 +139,10 @@ const version = "Alpha";
 const miniState = ref(Cookies.get("miniState") === "true" ? true : false);
 
 const isExpasionItemExpanded = ref(false);
+
+const goTo = (route) => {
+  router.push({ name: route });
+};
 
 watchEffect(() => {
   if ($q.screen.lt.md) {

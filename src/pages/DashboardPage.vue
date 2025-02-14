@@ -17,6 +17,7 @@
       <div class="flex justify-between items-center q-py-md">
         <div>
           <q-input
+            v-model="search"
             label="Buscar"
             class="semiRound bg-white"
             style="min-width: 390px"
@@ -34,7 +35,7 @@
         </q-btn>
       </div>
       <div class="row">
-        <q-table :columns="columnsEmpresas" :rows="licencas" class="col-12">
+        <q-table :columns="columnsEmpresas" :rows="licencas" class="col-12" :filter="search">
           <template v-slot:header="props">
             <q-tr :props="props">
               <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -56,7 +57,7 @@
                     class="flex items-center text-h6"
                     style="font-size: 18px"
                   >
-                    <q-icon name="mdi-bank-outline" size="24px" />
+                    <q-icon name="mdi-bank-outline" size="24px" class="q-mr-md"/>
                     {{ props.row[col.field] }}
                   </div>
                 </template>
@@ -87,6 +88,7 @@
                 <div>
                   <div class="row q-pb-sm">
                     <q-input
+                      v-model="search2"
                       label="Buscar"
                       class="col-4 bg-white"
                       outlined
@@ -111,6 +113,7 @@
                     :columns="columns"
                     :rows="props.row.monitoramento_licencas"
                     class="full-width"
+                    :filter='search2'
                   >
                     <template #body-cell-acoes="{ row }">
                       <q-td class="flex flex-center">
@@ -141,6 +144,8 @@ import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
 const $q = useQuasar();
 const licencas = ref([]);
+const search = ref("");
+const search2 = ref("");
 
 const columns = [
   {
@@ -154,7 +159,7 @@ const columns = [
     name: "n_documento",
     label: "N Documento",
     field: "n_documento",
-    align: "right",
+    align: "left",
     required: true,
   },
   {
@@ -182,6 +187,9 @@ const columns = [
     name: "data_emissao",
     label: "data Emissão",
     field: "data_emissao",
+    format: (val) => {
+      return val.split('-').reverse().join('/');
+    },
     align: "left",
     required: true,
   },
@@ -189,6 +197,9 @@ const columns = [
     name: "data_validade",
     label: "Data Validade",
     field: "data_validade",
+    format: (val) => {
+      return val.split('-').reverse().join('/');
+    },
     align: "left",
     required: true,
   },

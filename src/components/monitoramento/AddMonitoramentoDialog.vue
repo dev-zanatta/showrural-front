@@ -7,17 +7,9 @@
       >
         <div class="flex-grow" style="flex-basis: 200px;">
           <div class="q-py-sm">Informe a Razão Social</div>
-          <q-input
+          <RazaoSocialSelect 
             v-model="razaoSocial"
-            label="Buscar"
-            class="bg-white"
-            outlined
-            dense
-          >
-            <template #append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
+          />
         </div>
         <div class="flex-grow">
           <div class="q-py-sm">Informe o tipo</div>
@@ -45,6 +37,7 @@ import { useDialogPluginComponent, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { ref } from "vue";
 import ViewLicencasDialog from "./ViewLicencasDialog.vue";
+import RazaoSocialSelect from "/src/components/RazaoSocialSelect.vue";
 
 defineEmits([...useDialogPluginComponent.emits]);
 
@@ -72,7 +65,7 @@ const onOKClick = async () => {
       componentProps: {
         licencas: response.data,
         selected: selected.value,
-        razaoSocial: razaoSocial.value,
+        razaoSocial: razaoSocial.value.nome_razao_social,
       }
     }).onOk(() => {
       onDialogOK(razaoSocial.value);

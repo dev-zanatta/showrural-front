@@ -2,6 +2,7 @@
   <q-page class="">
     <div class="row q-pb-md">
       <q-input
+        v-model="search"
         label="Buscar"
         class="semiRound bg-white"
         style="width: 390px"
@@ -21,6 +22,7 @@
       :columns="columns"
       :rows="modalidades"
       class="full-width"
+      :filter="search"
     >
       <template #body-cell-acoes="{ row }">
         <q-td>
@@ -42,6 +44,7 @@ import { onMounted, ref } from 'vue';
 //
 const $q = useQuasar();
 const modalidades = ref([]);
+const search = ref('');
 const columns = [
   {
     name: 'sigla',

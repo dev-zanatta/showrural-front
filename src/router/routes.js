@@ -12,7 +12,7 @@ const routes = [
       { 
         path: 'documentos',
         name: 'DocumentosPage',
-        meta: { title: 'Documentos' },
+        meta: { title: 'Licenças' },
         component: () => import('pages/DocumentosPage.vue') 
       },
       { 

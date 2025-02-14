@@ -1,16 +1,30 @@
 <template>
   <q-page class="">
-    <div class="row col-12 q-pb-md">
+    <!-- <div class="row col-12 q-pb-md"> -->
       <!-- <div>Total de dados no excel: {{ dadosExcel.length }}</div> -->
-      <q-file filled v-model="excelInput" label="Clique para inserir novas licenças" class="col-2"/>
-    </div>
+      <!-- <q-file filled v-model="excelInput" label="Clique para inserir novas licenças" class="col-2"/> -->
+    <!-- </div> -->
     <div class="row col-12 q-pb-md">
       Todas as licenças cadastradas
+    </div>
+    <div class="row q-pb-sm">
+      <q-input
+        v-model="search"
+        label="Buscar"
+        class="col-4 bg-white"
+        outlined
+        dense
+      >
+        <template #append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
     </div>
     <q-table
       :columns="columns"
       :rows="licencas"
       :loading="loading"
+      :filter="search"
     >
       <template #body-cell-atividade="{row}">
         <q-td style="width: 15%">
@@ -34,6 +48,7 @@ const licencas = ref([]);
 const dadosExcel = ref([]);
 const excelInput = ref(null);
 const loading = ref(true);
+const search = ref("");
 
 const columns = [
   {
@@ -88,6 +103,9 @@ const columns = [
     name: "data_emissao",
     label: "data Emissão",
     field: "data_emissao",
+    format: (val) => {
+      return val.split('-').reverse().join('/');
+    },
     align: "left",
     style: "width: 10%",
     required: true,
@@ -96,6 +114,9 @@ const columns = [
     name: "data_validade",
     label: "Data Validade",
     field: "data_validade",
+    format: (val) => {
+      return val.split('-').reverse().join('/');
+    },
     align: "left",
     style: "width: 10%",
     required: true,
