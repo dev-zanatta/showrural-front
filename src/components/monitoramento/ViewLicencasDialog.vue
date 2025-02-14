@@ -35,12 +35,12 @@
   </q-dialog>
 </template>
 <script setup>
-import { useDialogPluginComponent } from "quasar";
+import { useDialogPluginComponent, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { onMounted, ref } from "vue";
 
 defineEmits([...useDialogPluginComponent.emits]);
-
+const $q = useQuasar();
 const allLicencas = ref([]);
 const emails = ref("");
 const props = defineProps({
@@ -103,6 +103,14 @@ const columns = [
 const { onDialogOK, dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const onOKClick = async () => {
+  if(!emails.value || testEmail(emails.value) == false) {
+    $q.notify({
+      message: "Informe os emails",
+      color: "negative",
+      position: "top",
+    });
+    return;
+  }
   const response = await api.post("/novo-monitoramento", {
     razaoSocial: props.razaoSocial,
     selected: props.selected.label,
@@ -111,6 +119,16 @@ const onOKClick = async () => {
   if (response.data) {
     onDialogOK();
   }
+};
+
+const testEmail = (emails) => {
+  const emailArray = emails.split(",");
+  for (let i = 0; i < emailArray.length; i++) {
+    if (!emailArray[i].includes("@")) {
+      return false;
+    }
+  }
+  return true;
 };
 
 onMounted(() => {

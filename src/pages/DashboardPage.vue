@@ -17,6 +17,7 @@
       <div class="flex justify-between items-center q-py-md">
         <div>
           <q-input
+            v-model="search"
             label="Buscar"
             class="bg-white"
             style="min-width: 390px"
@@ -34,7 +35,7 @@
         </q-btn>
       </div>
       <div class="row">
-        <q-table :columns="columnsEmpresas" :rows="licencas" class="col-12">
+        <q-table :columns="columnsEmpresas" :rows="licencas" class="col-12" :filter="search">
           <template v-slot:header="props">
             <q-tr :props="props">
               <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -56,11 +57,7 @@
                     class="flex items-center text-h6"
                     style="font-size: 18px"
                   >
-                    <q-icon
-                      name="mdi-bank-outline"
-                      size="24px"
-                      class="q-pa-xs"
-                    />
+                    <q-icon name="mdi-bank-outline" size="24px" class="q-mr-md"/>
                     {{ props.row[col.field] }}
                   </div>
                 </template>
@@ -91,6 +88,7 @@
                 <div>
                   <div class="row q-pb-sm">
                     <q-input
+                      v-model="search2"
                       label="Buscar"
                       class="col-4 bg-white"
                       outlined
@@ -104,8 +102,11 @@
                     <q-btn
                       flat
                       icon="mdi-microsoft-excel"
-                      @click="downloadFile"
+                      @click="downloadFile(props.row)"
                     >
+                      <q-tooltip>
+                        Relatório em excel
+                      </q-tooltip>
                     </q-btn>
                   </div>
                   <q-table
@@ -113,6 +114,7 @@
                     :rows="props.row.monitoramento_licencas"
                     class="full-width"
                     @row-click="(evt, row) => onRowClick(row)"
+                    :filter='search2'
                   >
                     <template #body-cell-acoes="{ row }">
                       <q-td class="flex flex-center no-wrap">
@@ -178,6 +180,8 @@ import LicencaDialog from "src/components/licencas/LicencaDialog.vue";
 const $q = useQuasar();
 const licencas = ref([]);
 const loadingPDF = ref({});
+const search = ref("");
+const search2 = ref("");
 
 const columns = [
   {
@@ -191,7 +195,7 @@ const columns = [
     name: "n_documento",
     label: "Documento",
     field: "n_documento",
-    align: "right",
+    align: "left",
     required: true,
   },
   {
@@ -219,6 +223,9 @@ const columns = [
     name: "data_emissao",
     label: "Emissão",
     field: "data_emissao",
+    format: (val) => {
+      return val.split('-').reverse().join('/');
+    },
     align: "left",
     required: true,
   },
@@ -226,6 +233,9 @@ const columns = [
     name: "data_validade",
     label: "Validade",
     field: "data_validade",
+    format: (val) => {
+      return val.split('-').reverse().join('/');
+    },
     align: "left",
     required: true,
   },
@@ -381,8 +391,29 @@ const onRowClick = (row) => {
   });
 };
 
-const downloadFile = () => {
-  console.log("Download");
+const downloadFile = async (row) => {
+  const response = await api.post('/gerar-excel-com-licencas', {
+    licencas: row.monitoramento_licencas.map(licenca => {
+      const { pdf, ...rest } = licenca;
+      pdf;
+      return rest;
+    }),
+  });
+  if(response.data.base64) {
+    const byteCharacters = atob(response.data.base64);
+    const byteNumbers = new Array(byteCharacters.length).fill().map((_, i) => byteCharacters.charCodeAt(i));
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'relatorio.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
 };
 
 onMounted(async () => {
