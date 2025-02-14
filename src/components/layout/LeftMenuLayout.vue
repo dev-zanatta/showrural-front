@@ -38,8 +38,29 @@
       </div>
 
       <q-list class="column no-wrap">
+        <q-item v-ripple clickable>
+          <div class="flex">
+            <q-item-section avatar>
+              <template #default>
+                <img
+                  :src="logo"
+                  alt="avatar"
+                  style="width: 25px; height: 25px; border-radius: 50%"
+                />
+              </template>
+            </q-item-section>
+            <q-item-section>Lince</q-item-section>
+          </div>
+          <q-tooltip
+            v-if="miniState"
+            anchor="center right"
+            self="center left"
+            :offset="[10, 10]"
+            >Lince</q-tooltip
+          >
+        </q-item>
         <template v-for="item in navigationItems" :key="item.name">
-        <q-item
+          <q-item
             v-ripple
             clickable
             exact-active-class="menu-selected"
@@ -47,19 +68,19 @@
             active-class="menu-selected"
             :to="{ name: item.name }"
             class="q-my-xs"
-        >
+          >
             <q-item-section avatar>
-            <q-icon :name="item.icon" style="font-size: 18px" />
+              <q-icon :name="item.icon" style="font-size: 18px" />
             </q-item-section>
             <q-item-section>{{ item.title }}</q-item-section>
             <q-tooltip
-            v-if="miniState"
-            anchor="center right"
-            self="center left"
-            :offset="[10, 10]"
-            >{{ item.title }}</q-tooltip
+              v-if="miniState"
+              anchor="center right"
+              self="center left"
+              :offset="[10, 10]"
+              >{{ item.title }}</q-tooltip
             >
-        </q-item>
+          </q-item>
         </template>
       </q-list>
 
@@ -90,6 +111,7 @@ import { ref, watch, watchEffect } from "vue";
 import LogoSoftparLight from "src/assets/softpar_logo_light.svg";
 import LogoSoftparDark from "src/assets/softpar_logo_dark.svg";
 import LogoSoftparMini from "src/assets/softpar_logo_mini.svg";
+import logo from "src/assets/logo.svg";
 import { Cookies } from "quasar";
 import { useQuasar } from "quasar";
 

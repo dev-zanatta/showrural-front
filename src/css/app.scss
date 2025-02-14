@@ -110,9 +110,18 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .borderCard {
-  border: 0.5px solid #ABADB0;
+  border: 0.5px solid #abadb0;
 }
 
-.semiRound {
-  border-radius: 8px;
+.q-field--dense .q-field__control {
+  height: 45px;
+}
+
+.q-field--dense .q-field__label {
+  font-size: 14px;
+  top: 14px;
+}
+
+.q-field--dense .q-field__marginal {
+  height: 45px;
 }

@@ -45,6 +45,7 @@
       <q-page>
         <q-scroll-area
           ref="scrollAreaRef"
+          style="position: relative"
           :style="
             $q.screen.lt.sm
               ? 'height: calc(100dvh - 68px - env(safe-area-inset-top)) !important;'
@@ -60,6 +61,7 @@
               />
             </Transition>
           </router-view>
+          <img class="absolute-bottom-right q-pa-lg" :src="BottomLogo" alt="logo" />
         </q-scroll-area>
       </q-page>
     </q-page-container>
@@ -72,6 +74,7 @@ import { useRoute } from "vue-router";
 // import { useAuth } from "src/composables/useAuth";
 // import { useRouter } from "vue-router";
 import LeftMenuLayout from "src/components/layout/LeftMenuLayout.vue";
+import BottomLogo from "src/assets/bottom_logo.svg";
 // import LeftMenuLayoutMobile from "src/components/layout/LeftMenuLayoutMobile.vue";
 
 defineOptions({

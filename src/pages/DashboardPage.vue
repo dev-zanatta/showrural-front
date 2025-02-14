@@ -1,111 +1,128 @@
 <template>
-  <div>
+  <div class="full-width" style="height: 100vh">
     <DefaultHeaderPage />
-
-    <div class="col-12 row q-pb-md q-pt-sm q-my-auto">
-      <div>
-        <q-input
-          label="Buscar"
-          class="semiRound bg-white"
-          style="min-width: 390px"
-          outlined
-          dense
-        >
-          <template #append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
+    <div v-if="licencas.length == 0" class="flex flex-center full-height">
+      <div class="column items-center">
+        <div class="q-pa-md">
+          Comece a monitorar suas licencas ambientas AGORA!!
+        </div>
+        <div>
+          <q-btn color="button" class="semiRound" @click="openMonitorarDialog">
+            <span class="q-my-sm">Novo monitoramento</span>
+          </q-btn>
+        </div>
       </div>
-      <q-space />
-      <div>
+    </div>
+    <div v-else>
+      <div class="flex justify-between items-center q-py-md">
+        <div>
+          <q-input
+            label="Buscar"
+            class="semiRound bg-white"
+            style="min-width: 390px"
+            outlined
+            dense
+          >
+            <template #append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+        <q-space />
         <q-btn color="button" class="semiRound" @click="openMonitorarDialog">
           <span class="q-my-sm">Novo monitoramento</span>
         </q-btn>
       </div>
-    </div>
-    <div v-if="licencas.length == 0" class="flex q-my-auto">
-      <div>Nenhuma licença à mostrar</div>
-      <div>Comece a monitorar agora</div>
-      <q-img :src="sem_licencas" width="370px" height="276"></q-img>
-    </div>
-    <div class="row">
-      <q-table :columns="columnsEmpresas" :rows="licencas" class="col-12">
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props">
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-        </template>
-        <template v-slot:body="props">
-          <q-tr :props="props" @click="props.expand = !props.expand">
-            <q-td v-for="col in columnsEmpresas" :key="col.name" :props="props">
-              <q-td v-if="col.field == 'razao_social'">
-                <q-item-section>
-                  {{ props.row[col.field] }}
-                </q-item-section>
+      <div class="row">
+        <q-table :columns="columnsEmpresas" :rows="licencas" class="col-12">
+          <template v-slot:header="props">
+            <q-tr :props="props">
+              <q-th v-for="col in props.cols" :key="col.name" :props="props">
+                {{ col.label }}
+              </q-th>
+            </q-tr>
+          </template>
+          <template v-slot:body="props">
+            <q-tr :props="props" @click="props.expand = !props.expand">
+              <q-td
+                v-for="col in columnsEmpresas"
+                :key="col.name"
+                :props="props"
+              >
+                <q-td v-if="col.field == 'razao_social'">
+                  <q-item-section>
+                    {{ props.row[col.field] }}
+                  </q-item-section>
+                </q-td>
+                <q-td v-if="col.field == 'total'">
+                  <q-item-section @click="openTodos(props.row)">
+                    <span>{{ props.row.monitoramento_licencas?.length }}</span>
+                  </q-item-section>
+                </q-td>
+                <q-td v-if="col.field == 'vencer'">
+                  <q-item-section @click="openVencendo(props.row)">
+                    {{ countVencendo(props.row) }}
+                  </q-item-section>
+                </q-td>
+                <q-td v-if="col.field == 'vencidas'">
+                  <q-item-section @click="openVencidas(props.row)">
+                    {{ countVencidas(props.row) }}
+                  </q-item-section>
+                </q-td>
               </q-td>
-              <q-td v-if="col.field == 'total'">
-                <q-item-section @click="openTodos(props.row)">
-                  <span>{{ props.row.monitoramento_licencas?.length }}</span>
-                </q-item-section>
+            </q-tr>
+            <q-tr v-show="props.expand" :props="props" class="full-width">
+              <q-td colspan="100%">
+                <div>
+                  <div class="row q-pb-sm">
+                    <q-input
+                      label="Buscar"
+                      class="col-4 bg-white"
+                      outlined
+                      dense
+                    >
+                      <template #append>
+                        <q-icon name="search" />
+                      </template>
+                    </q-input>
+                    <q-space />
+                    <q-btn
+                      color="button"
+                      flat
+                      icon="mdi-download"
+                      @click="downloadFile"
+                    >
+                    </q-btn>
+                  </div>
+                  <q-table
+                    :columns="columns"
+                    :rows="props.row.monitoramento_licencas"
+                    class="full-width"
+                  >
+                    <template #body-cell-acoes="{ row }">
+                      <q-td>
+                        <q-item-section>
+                          <q-btn @click="checa(row)">Baixar</q-btn>
+                        </q-item-section>
+                      </q-td>
+                    </template>
+                  </q-table>
+                </div>
               </q-td>
-              <q-td v-if="col.field == 'vencer'">
-                <q-item-section @click="openVencendo(props.row)">
-                  {{ countVencendo(props.row) }}
-                </q-item-section>
-              </q-td>
-              <q-td v-if="col.field == 'vencidas'">
-                <q-item-section @click="openVencidas(props.row)">
-                  {{ countVencidas(props.row) }}
-                </q-item-section>
-              </q-td>
-            </q-td>
-          </q-tr>
-          <q-tr v-show="props.expand" :props="props" class="full-width">
-            <q-td colspan="100%">
-              <div>
-                <q-input
-                  label="Buscar"
-                  class="semiRound bg-white"
-                  style="min-width: 390px"
-                  outlined
-                  dense
-                >
-                  <template #append>
-                    <q-icon name="search" />
-                  </template>
-                </q-input>
-                <q-table
-                  :columns="columns"
-                  :rows="props.row.monitoramento_licencas"
-                  class="full-width"
-                >
-                  <template #body-cell-acoes="{ row }">
-                    <q-td>
-                      <q-item-section>
-                        <q-btn @click="checa(row)">Baixar</q-btn>
-                      </q-item-section>
-                    </q-td>
-                  </template>
-                </q-table>
-              </div>
-            </q-td>
-          </q-tr>
-        </template>
-      </q-table>
+            </q-tr>
+          </template>
+        </q-table>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import DefaultHeaderPage from "src/components/layout/DefaultHeaderPage.vue";
-// import CardIconChart from "src/components/charts/CardIconChart.vue";
 import { useQuasar } from "quasar";
 import AddMonitoramentoDialog from "src/components/monitoramento/AddMonitoramentoDialog.vue";
 import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
-import sem_licencas from "/src/assets/sem_licencas.svg";
 
 const $q = useQuasar();
 const licencas = ref([]);
@@ -275,7 +292,11 @@ const openTodos = (monitoramento) => {
 
 const checa = (row) => {
   console.log(row);
-  console.log(row.n_protocolo)
+  console.log(row.n_protocolo);
+};
+
+const downloadFile = () => {
+  console.log("Download");
 };
 
 onMounted(async () => {
